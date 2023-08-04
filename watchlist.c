@@ -59,7 +59,7 @@ void searchMoviesByFirstLetter(FILE *file, char letter)
         {
             printf("No movie found with that letter.\n");
             char ch;
-            printf("Wanna search again? (Y/N): ");
+            printf("Wanna search another movie with other letter? (Y/N): ");
             scanf(" %c", &ch);
             getchar();
             if (ch == 'y' || ch == 'Y')
@@ -83,7 +83,7 @@ void closeFiles()
 void addToWatched(FILE *file)
 {
     movie m;
-    char ch,ch1;
+    char ch, ch1;
 
     rewind(file);
     do
@@ -98,13 +98,14 @@ void addToWatched(FILE *file)
         printf("Want to add another movie Y/N: ");
         scanf(" %c", &ch);
         getchar();
-        if (ch!='y'||ch!='Y')
+        if (ch != 'y' || ch != 'Y')
         {
-            printf("If you wanna quit type Y if not enter any key to go back to the main menu: ");
+            printf("If you wanna quit type Q if not enter any key to go back to the main menu: ");
             scanf(" %c", &ch1);
             getchar();
-            if (ch1=='y'||ch1=='Y')
-            {   closeFiles(); 
+            if (ch1 == 'q' || ch1 == 'Q')
+            {
+                closeFiles();
                 exit(0);
             }
         }
@@ -114,7 +115,7 @@ void addToWatched(FILE *file)
 void addToToWatched(FILE *file)
 {
     movie m;
-    char ch,ch1;
+    char ch, ch1;
 
     rewind(file);
     do
@@ -129,13 +130,13 @@ void addToToWatched(FILE *file)
         printf("Want to add another movie Y/N: ");
         scanf(" %c", &ch);
         getchar();
-        if (ch!='y'||ch!='Y')
+        if (ch != 'y' || ch != 'Y')
         {
-            printf("If you wanna quit type Y if not enter any key to go back to the main menu: ");
+            printf("If you wanna quit enter Q if not enter any key to go back to the main menu: ");
             scanf(" %c", &ch1);
             getchar();
-            if (ch1=='y'||ch1=='Y')
-            {   
+            if (ch1 == 'q' || ch1 == 'Q')
+            {
                 closeFiles();
                 exit(0);
             }
@@ -151,7 +152,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
     {
         clear();
         printf("WELCOME TO WATCHLIST\n");
-        printf("To open your profile type 'p', to add a new movie or series type 'n': ");
+        printf("To open your profile type 'p', to add a new movie or series type 'n':,to quit type 'q': ");
         ch1 = getchar();
         getchar();
 
@@ -178,7 +179,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                         getchar();
 
                         if (ch2 == 'a' || ch2 == 'A')
-                        {    
+                        {
                             printAllMovies(watchedFile);
                             char ch3;
                             printf("To go back to the profile section enter P ; to quit, enter Q; and for main menu enter M: ");
@@ -192,9 +193,9 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 return; // Exit the program.
                             }
-                            else if(ch3=='M'||ch3=='m')
+                            else if (ch3 == 'M' || ch3 == 'm')
                             {
-                                openProfile(watchedFile,toWatchFile);
+                                openProfile(watchedFile, toWatchFile);
                             }
                         }
                         else if (ch2 == 's' || ch2 == 'S')
@@ -217,9 +218,9 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 return; // Exit the program.
                             }
-                            else if(ch3=='M'||ch3=='M')
+                            else if (ch3 == 'M' || ch3 == 'M')
                             {
-                                openProfile(watchedFile,toWatchFile);
+                                openProfile(watchedFile, toWatchFile);
                             }
                         }
                         else
@@ -266,9 +267,9 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 return; // Exit the program.
                             }
-                            else if(ch3=='M'||ch3=='m')
+                            else if (ch3 == 'M' || ch3 == 'm')
                             {
-                                openProfile(watchedFile,toWatchFile);
+                                openProfile(watchedFile, toWatchFile);
                             }
                         }
                         else if (ch2 == 's' || ch2 == 'S')
@@ -291,9 +292,9 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 return; // Exit the program.
                             }
-                            else if(ch3=='M'||ch3=='m')
+                            else if (ch3 == 'M' || ch3 == 'm')
                             {
-                                openProfile(watchedFile,toWatchFile);
+                                openProfile(watchedFile, toWatchFile);
                             }
                         }
                         else
@@ -328,7 +329,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                         continue; // Retry the profile section.
                     }
                     else
-                    {   
+                    {
                         return; // Exit the program.
                     }
                 }
@@ -365,6 +366,10 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                 }
             }
             break;
+            
+           case'q':
+           case'Q':
+              return;
 
         default:
             clear();
@@ -404,4 +409,3 @@ int main()
 
     return 0;
 }
-
