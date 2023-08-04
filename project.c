@@ -10,6 +10,7 @@ typedef struct
 } movie;
 int main()
 {
+    
     FILE *data, *data2;
     movie m;
     char user[20], ch1, ch2, ch3, ch4, al;
@@ -21,30 +22,47 @@ int main()
         exit(1);
     }
 there:
+    
     printf("WElCOME TO WATCHLIST\n");
     printf("To open your profile type 'p', to add new movie or series type 'n': ");
+    int found=0;
     ch1 = getchar();
     switch (ch1)
     {
     case 'p':
     case 'P':
+        yes:
         printf("Welcome to the profile Section\n");
         printf("Enter W to see watched and Enter T to see to Watch movie ");
         scanf(" %c", &ch2);
         getchar();
+        
         if (ch2 == 'w' || ch2 == 'W')
-        {
+        {   again:
             rewind(data);
             printf("This is watched movie section\n");
             printf("Wanna see all list or search according to your own preference for all enter A for search Enter S:  ");
             scanf(" %c", &ch4);
             getchar();
             if (ch4 == 'a' || ch4 == 'A')
-            {
+            {   int count=0;
                 while ((fread(&m, sizeof(movie), 1, data)) == 1)
                 {
                     printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
+                    count++;
                 }
+                if (count==0)
+                {
+                    printf("the list is empty try adding new movie from movie adding option\n");
+                }
+                 printf("to again go back to main menu enter M to exit enter anything except M:  ");
+            scanf(" %c", &ch3);
+            getchar();
+            if (ch3 == 'm' || ch3 == 'M')
+                goto there;
+            else{printf("Thank you for using our app\n");
+                return 0;}
+
             }
             else if (ch4 == 'S' || ch4 == 's')
             {
@@ -54,27 +72,55 @@ there:
                 while ((fread(&m, sizeof(movie), 1, data)) == 1)
                 {
                     if (m.name[0] == al)
+                        found=1;
                         printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
                 }
+                if(found==0)
+                {
+                    printf("No movie found with that letter\n");
+                }
             }
-            else
+            else{
                 printf("Invalid choices");
+                printf("choose again\n");
+                goto again;}
+                 printf("to again go back to main menu enter M to exit enter anything except M:  ");
+            scanf(" %c", &ch3);
+            getchar();
+            if (ch3 == 'm' || ch3 == 'M')
+                goto there;
+        else{
+                printf("Thank you for using our app\n");
+                return 0;}
         }
 
         else if (ch2 == 'T' || ch2 == 't')
 
-        {
+        {   mere:
             rewind(data2);
-            printf("This is watched movie section\n");
+            printf("This is to_watched movie section\n");
             printf("Wanna see all list or search according to your own preference for all enter A for search Enter S:  ");
             scanf(" %c", &ch4);
             getchar();
             if (ch4 == 'a' || ch4 == 'A')
-            {
+            {   int count=0;
                 while ((fread(&m, sizeof(movie), 1, data2)) == 1)
                 {
                     printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
+                    count++;
                 }
+                if (count==0)
+                {
+                    printf("the list is empty try adding new movie from movie adding option\n");
+                }
+                 printf("to again go back to main menu enter M to exit enter anything except M:  ");
+            scanf(" %c", &ch3);
+            getchar();
+            if (ch3 == 'm' || ch3 == 'M')
+                goto there;
+            else{
+                printf("Thank you for using our app\n");
+                    return 0;}
             }
             else if (ch4 == 'S' || ch4 == 's')
             {
@@ -85,16 +131,37 @@ there:
                 {
                     if (m.name[0] == al)
                         printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
+                        found=1;
+                }
+                if(found==0)
+                {
+                    printf("No movie found with that letter\n");
                 }
             }
-            else
-                printf("Invalid choices");
+            else{
+                printf("Invalid choices\n");
+                printf("choose again\n");
+                goto mere;}
+            printf("to again go back to main menu enter M to exit enter anything except M:  ");
+            scanf(" %c", &ch3);
+            getchar();
+            if (ch3 == 'm' || ch3 == 'M')
+                goto there;
+            else{
+                printf("Thankyou for using our app\n");
+                return 0;}
+        }
+        else
+        {
+            printf("Invalid choice\n");
+            printf("choose again\n");
+            goto yes;
         }
         break;
 
     case 'n':
     case 'N':
-    {
+    {   here:
         printf("This is where you can add new movie\n");
         printf("Enter W to add in watched and Enter T to add to To_Watch movie:  ");
         scanf(" %c", &ch2);
@@ -121,8 +188,9 @@ there:
             getchar();
             if (ch3 == 'm' || ch3 == 'M')
                 goto there;
-            else
-                return 0;
+            else{
+                printf("Thank you for using our app\n");
+                return 0;}
         }
 
         else if (ch2 == 't' || ch2 == 'T')
@@ -147,12 +215,15 @@ there:
             getchar();
             if (ch3 == 'm' || ch3 == 'M')
                 goto there;
-            else
-                return 0;
+            else{
+                printf("Thank you for using our app\n");
+                return 0;}
         }
         else
-        {
-            printf("Invalid choices");
+        {  
+            printf("Invalid choices\n");
+            printf("choose again");
+            goto here;
         }
 
         break;
@@ -160,6 +231,8 @@ there:
 
     default:
         printf("Invalid choice");
+        printf("Choose again");
+        goto there;
     }
     
     fclose(data);
