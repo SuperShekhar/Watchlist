@@ -74,8 +74,9 @@ there:
                 }
             }
             else if (ch4 == 'S' || ch4 == 's')
-            {
+            {   ya:
                 clear();
+
                 printf("We have sorted movie in alphabetically order to find type first letter of movie: ");
                 scanf(" %c", &al);
                 getchar();
@@ -88,6 +89,7 @@ there:
                 if (found == 0)
                 {
                     printf("No movie found with that letter\n");
+                    goto ya;
                 }
             }
             else
@@ -144,6 +146,7 @@ there:
             }
             else if (ch4 == 'S' || ch4 == 's')
             {   clear();
+                na:
                 printf("We have sorted movie in alphabetically order to find type first letter of movie: ");
                 scanf(" %c", &al);
                 getchar();
@@ -156,6 +159,7 @@ there:
                 if (found == 0)
                 {
                     printf("No movie found with that letter\n");
+                    goto na;
                 }
             }
             else
