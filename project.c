@@ -16,7 +16,7 @@ int main()
 
     FILE *data, *data2;
     movie m;
-    char user[20], ch1, ch2, ch3, ch4, al;
+    char user[20], ch1, ch2, ch3, ch4,ch5, al;
     data = fopen("watched.bin", "a+b");
     data2 = fopen("to_watched.bin", "a+b");
     if (data == NULL || data2 == NULL)
@@ -29,6 +29,7 @@ there:
     printf("WElCOME TO WATCHLIST\n");
     printf("To open your profile type 'p', to add new movie or series type 'n': ");
     int found = 0;
+    int count=0;
     ch1 = getchar();
     switch (ch1)
     {
@@ -52,7 +53,7 @@ there:
             getchar();
             if (ch4 == 'a' || ch4 == 'A')
             {
-                int count = 0;
+                 count = 0;
                 while ((fread(&m, sizeof(movie), 1, data)) == 1)
                 {
                     printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
@@ -76,19 +77,30 @@ there:
             else if (ch4 == 'S' || ch4 == 's')
             {
                 clear();
+                na:
                 printf("We have sorted movie in alphabetically order to find type first letter of movie: ");
                 scanf(" %c", &al);
                 getchar();
+                count = 0;
                 while ((fread(&m, sizeof(movie), 1, data)) == 1)
-                {
-                    if (m.name[0] == al)
+                {   count++;
+                    if (m.name[0] == al){
                         found = 1;
-                    printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
+                    printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);}
                 }
-                if (found == 0)
+                if (count==0)
                 {
-                    printf("No movie found with that letter\n");
+                    printf("the list is empty try adding new movie from movie adding option\n");
                 }
+                else{
+                if (found == 0)
+                {   
+                    printf("No movie found with that letter\n");
+                    printf("wanna search again y/n:");
+                    scanf(" %c",&ch5);
+                    if(ch5=='y'||ch5=='Y')
+                    goto na;
+                }}
             }
             else
             {
@@ -121,7 +133,7 @@ there:
             getchar();
             if (ch4 == 'a' || ch4 == 'A')
             {
-                int count = 0;
+                count = 0;
                 while ((fread(&m, sizeof(movie), 1, data2)) == 1)
                 {
                     printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
@@ -144,19 +156,29 @@ there:
             }
             else if (ch4 == 'S' || ch4 == 's')
             {   clear();
+                ya:
                 printf("We have sorted movie in alphabetically order to find type first letter of movie: ");
                 scanf(" %c", &al);
                 getchar();
+                   count = 0;
                 while ((fread(&m, sizeof(movie), 1, data2)) == 1)
-                {
-                    if (m.name[0] == al)
+                {   count++;
+                    if (m.name[0] == al){
                         printf("Name=%sRating=%.2f\nGenre=%s\n", m.name, m.rating, m.genre);
-                    found = 1;
+                    found = 1;}
                 }
+                if(count==0)
+                printf("the list is empty try adding new movie from movie adding option\n");
+                else{
                 if (found == 0)
                 {
                     printf("No movie found with that letter\n");
-                }
+                    printf("wanna search again y/n:");
+                    scanf(" %c",&ch5);
+                    if(ch5=='y'||ch5=='Y')
+                    goto ya;
+                }}
+                
             }
             else
             {    clear();
