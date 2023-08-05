@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 void clear()
 {
@@ -92,14 +91,29 @@ void addToWatched(FILE *file)
         fgets(m.name, sizeof(m.name), stdin);
         printf("Enter genre of the movie: ");
         fgets(m.genre, sizeof(m.genre), stdin);
-        printf("Enter the rating: ");
-        scanf("%f", &m.rating);
+         int  validRating = 0;
+        while (!validRating)
+        {
+            printf("Enter the rating: ");
+            char ratingStr[20];
+            fgets(ratingStr, sizeof(ratingStr), stdin);
+            
+            if (sscanf(ratingStr, "%f", &m.rating) == 1)
+            {
+                validRating = 1;
+            }
+            else
+            {
+                printf("Invalid rating. Please enter a numeric value.\n");
+            }
+        }
         fwrite(&m, sizeof(movie), 1, file);
         printf("Want to add another movie Y/N: ");
         scanf(" %c", &ch);
         getchar();
-        if (ch != 'y' || ch != 'Y')
-        {
+       
+    } while (ch == 'y' || ch == 'Y');
+     
             printf("If you wanna quit type Q if not enter any key to go back to the main menu: ");
             scanf(" %c", &ch1);
             getchar();
@@ -108,8 +122,7 @@ void addToWatched(FILE *file)
                 closeFiles();
                 exit(0);
             }
-        }
-    } while (ch == 'y' || ch == 'Y');
+        
 }
 
 void addToToWatched(FILE *file)
@@ -124,15 +137,30 @@ void addToToWatched(FILE *file)
         fgets(m.name, sizeof(m.name), stdin);
         printf("Enter genre of the movie: ");
         fgets(m.genre, sizeof(m.genre), stdin);
-        printf("Enter the rating: ");
-        scanf("%f", &m.rating);
+        int  validRating = 0;
+        while (!validRating)
+        {
+            printf("Enter the rating: ");
+            char ratingStr[20];
+            fgets(ratingStr, sizeof(ratingStr), stdin);
+            
+            if (sscanf(ratingStr, "%f", &m.rating) == 1)
+            {
+                validRating = 1;
+            }
+            else
+            {
+                printf("Invalid rating. Please enter a numeric value.\n");
+            }
+        }
         fwrite(&m, sizeof(movie), 1, file);
         printf("Want to add another movie Y/N: ");
         scanf(" %c", &ch);
         getchar();
-        if (ch != 'y' || ch != 'Y')
-        {
-            printf("If you wanna quit enter Q if not enter any key to go back to the main menu: ");
+        
+        }
+        while (ch == 'y' || ch == 'Y');
+        printf("If you wanna quit enter Q if not enter any key to go back to the main menu: ");
             scanf(" %c", &ch1);
             getchar();
             if (ch1 == 'q' || ch1 == 'Q')
@@ -140,20 +168,18 @@ void addToToWatched(FILE *file)
                 closeFiles();
                 exit(0);
             }
-        }
-    } while (ch == 'y' || ch == 'Y');
 }
 
 void openProfile(FILE *watchedFile, FILE *toWatchFile)
 {
-    char ch1, ch2;
+    char  ch2;
 
     while (1) // Infinite loop to keep the user in the main menu until they choose to exit.
     {
         clear();
         printf("WELCOME TO WATCHLIST\n");
         printf("To open your profile type 'p', to add a new movie or series type 'n':,to quit type 'q': ");
-        ch1 = getchar();
+        char ch1 = getchar();
         getchar();
 
         switch (ch1)
@@ -218,7 +244,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 return; // Exit the program.
                             }
-                            else if (ch3 == 'M' || ch3 == 'M')
+                            else if (ch3 == 'M' || ch3 == 'm')
                             {
                                 openProfile(watchedFile, toWatchFile);
                             }
@@ -366,10 +392,10 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                 }
             }
             break;
-            
-           case'q':
-           case'Q':
-              return;
+
+        case 'q':
+        case 'Q':
+            return;
 
         default:
             clear();
