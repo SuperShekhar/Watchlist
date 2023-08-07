@@ -1,11 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Function to clear the console screen
+// if using linux you can comment out this clear function and uncomment the other clear function
 void clear()
 {
-    printf("\033[2J\033[H");
+    system("cls");
 }
+// If you are using linux uncomment this clear function and comment out the other clear function
+/*
+void clear()
+{
+    system("clear");
+}*/
 
+// Structure to represent a movie
 typedef struct
 {
     char name[20];
@@ -13,6 +22,7 @@ typedef struct
     char genre[20];
 } movie;
 
+// Function to print all movies from a file
 void printAllMovies(FILE *file)
 {
     movie m;
@@ -31,8 +41,10 @@ void printAllMovies(FILE *file)
     }
 }
 
+// Function to search and print movies by the first letter of their name
 void searchMoviesByFirstLetter(FILE *file, char letter)
 {
+    clear();
     movie m;
     int count = 0;
     int found = 0;
@@ -58,11 +70,12 @@ void searchMoviesByFirstLetter(FILE *file, char letter)
         {
             printf("No movie found with that letter.\n");
             char ch;
-            printf("Wanna search another movie with other letter? (Y/N): ");
+            printf("Wanna search another movie with another letter? (Y/N): ");
             scanf(" %c", &ch);
             getchar();
             if (ch == 'y' || ch == 'Y')
             {
+                clear();
                 char al;
                 printf("Enter the new first letter of the movie: ");
                 scanf(" %c", &al);
@@ -74,13 +87,38 @@ void searchMoviesByFirstLetter(FILE *file, char letter)
 }
 
 FILE *watchedFile, *toWatchFile;
+void clearFiles()
+{
+    // Clear the "watched" file
+    fclose(watchedFile);
+    watchedFile = fopen("watched.bin", "wb"); // Open in write mode to truncate and clear the file
+    if (watchedFile == NULL)
+    {
+        printf("Already Cleared or Error clearing the watched file.\n");
+        exit(1);
+    }
+
+    // Clear the "to watch" file
+    fclose(toWatchFile);
+    toWatchFile = fopen("to_watched.bin", "wb"); // Open in write mode to truncate and clear the file
+    if (toWatchFile == NULL)
+    {
+        printf("Already Cleared Error clearing the to watch file.\n");
+        exit(1);
+    }
+}
+
+// Function to close open files
 void closeFiles()
 {
     fclose(watchedFile);
     fclose(toWatchFile);
 }
+
+// Function to add movies to the "watched" list
 void addToWatched(FILE *file)
 {
+    clear();
     movie m;
     char ch, ch1;
 
@@ -91,13 +129,13 @@ void addToWatched(FILE *file)
         fgets(m.name, sizeof(m.name), stdin);
         printf("Enter genre of the movie: ");
         fgets(m.genre, sizeof(m.genre), stdin);
-         int  validRating = 0;
+        int validRating = 0;
         while (!validRating)
         {
             printf("Enter the rating: ");
             char ratingStr[20];
             fgets(ratingStr, sizeof(ratingStr), stdin);
-            
+
             if (sscanf(ratingStr, "%f", &m.rating) == 1)
             {
                 validRating = 1;
@@ -108,23 +146,24 @@ void addToWatched(FILE *file)
             }
         }
         fwrite(&m, sizeof(movie), 1, file);
-        printf("Want to add another movie Y/N: ");
+        printf("Want to add another movie Y/N:\n");
         scanf(" %c", &ch);
         getchar();
-       
+        clear();
+
     } while (ch == 'y' || ch == 'Y');
-     
-            printf("If you wanna quit type Q if not enter any key to go back to the main menu: ");
-            scanf(" %c", &ch1);
-            getchar();
-            if (ch1 == 'q' || ch1 == 'Q')
-            {
-                closeFiles();
-                exit(0);
-            }
-        
+    clear();
+    printf("Quit = Q\nMain Menu= Any key:\n");
+    scanf(" %c", &ch1);
+    getchar();
+    if (ch1 == 'q' || ch1 == 'Q')
+    {
+        closeFiles();
+        exit(0);
+    }
 }
 
+// Function to add movies to the "to watch" list
 void addToToWatched(FILE *file)
 {
     movie m;
@@ -137,13 +176,13 @@ void addToToWatched(FILE *file)
         fgets(m.name, sizeof(m.name), stdin);
         printf("Enter genre of the movie: ");
         fgets(m.genre, sizeof(m.genre), stdin);
-        int  validRating = 0;
+        int validRating = 0;
         while (!validRating)
         {
             printf("Enter the rating: ");
             char ratingStr[20];
             fgets(ratingStr, sizeof(ratingStr), stdin);
-            
+
             if (sscanf(ratingStr, "%f", &m.rating) == 1)
             {
                 validRating = 1;
@@ -154,43 +193,56 @@ void addToToWatched(FILE *file)
             }
         }
         fwrite(&m, sizeof(movie), 1, file);
-        printf("Want to add another movie Y/N: ");
+        printf("Want to add another movie Y/N:\n");
         scanf(" %c", &ch);
         getchar();
-        
-        }
-        while (ch == 'y' || ch == 'Y');
-        printf("If you wanna quit enter Q if not enter any key to go back to the main menu: ");
-            scanf(" %c", &ch1);
-            getchar();
-            if (ch1 == 'q' || ch1 == 'Q')
-            {
-                closeFiles();
-                exit(0);
-            }
+        clear();
+    } while (ch == 'y' || ch == 'Y');
+    clear();
+    printf("Quit = Q \nMain Menu= Enter Any key:\n");
+    scanf(" %c", &ch1);
+    getchar();
+    if (ch1 == 'q' || ch1 == 'Q')
+    {
+        closeFiles();
+        exit(0);
+    }
 }
 
+// Function to open the user's profile
 void openProfile(FILE *watchedFile, FILE *toWatchFile)
 {
-    char  ch2;
+    char ch2;
 
     while (1) // Infinite loop to keep the user in the main menu until they choose to exit.
     {
         clear();
         printf("WELCOME TO WATCHLIST\n");
-        printf("To open your profile type 'p', to add a new movie or series type 'n':,to quit type 'q': ");
+        printf("What do you want to do?\n\n");
+        printf("Profile = P\nAdd New Movie=N\nQuit = Q\nReset Application=R\n\n");
         char ch1 = getchar();
         getchar();
 
         switch (ch1)
         {
+        case 'r':
+        case 'R':
+            clear();
+            clearFiles();
+            printf("loading.......\n");
+            printf("Application Reset Successful.\n");
+            printf("Press any key to continue.\n");
+            getchar();
+            openProfile(watchedFile, toWatchFile);
+            break;
         case 'p':
         case 'P':
             while (1) // Infinite loop to keep the user in the profile section until they choose to go back.
             {
                 clear();
-                printf("Welcome to the profile Section\n");
-                printf("Enter W to see watched movies and Enter T to see to Watch movies: ");
+                printf("Welcome to the Profile Section\n\n");
+                printf("Which list you want to see ?\n");
+                printf("Already Watched Movie= W\nTo_Watch Movie=T\n\n");
                 scanf(" %c", &ch2);
                 getchar();
 
@@ -200,15 +252,19 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                     {
                         clear();
                         printf("This is watched movie section\n");
-                        printf("Wanna see all list or search according to your own preference? For all, enter A; for search, enter S:  ");
+                        printf("What do you want to do?\n");
+                        printf("See All Watched List=A\nSearch Movie By First Letter=S\n\n");
                         scanf(" %c", &ch2);
                         getchar();
 
                         if (ch2 == 'a' || ch2 == 'A')
                         {
+                            clear();
                             printAllMovies(watchedFile);
+                            printf("Thankyou\n");
+                            printf("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
                             char ch3;
-                            printf("To go back to the profile section enter P ; to quit, enter Q; and for main menu enter M: ");
+                            printf("Go to Profile= P\nQuit = Q\nMain Menu= M\n\n");
                             scanf(" %c", &ch3);
                             getchar();
                             if (ch3 == 'p' || ch3 == 'P')
@@ -223,17 +279,37 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 openProfile(watchedFile, toWatchFile);
                             }
+                            else
+                            {
+
+                                clear();
+                                printf("Invalid choice\n");
+                                char retry;
+                                printf("Do you want to try again? (Y/N):\n");
+                                scanf(" %c", &retry);
+                                getchar();
+                                if (retry == 'y' || retry == 'Y')
+                                {
+                                    continue; // Retry the watched movies section.
+                                }
+                                else
+                                {
+                                    return; // Exit the program.
+                                }
+                            }
                         }
                         else if (ch2 == 's' || ch2 == 'S')
                         {
                             char al;
                             clear();
-                            printf("We have sorted movies in alphabetical order. To find, type the first letter of the movie: ");
+                            printf("This is The search bar , Enter First Letter of The Movie\n ");
                             scanf(" %c", &al);
                             getchar();
                             searchMoviesByFirstLetter(watchedFile, al);
+                            printf("Thankyou\n");
+                            printf("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
                             char ch3;
-                            printf("To go back to the profile enter P; to quit enter Q ; and for main menu enter M:");
+                            printf("Go to Profile= P\nQuit = Q\nMain Menu= M\n\n");
                             scanf(" %c", &ch3);
                             getchar();
                             if (ch3 == 'P' || ch3 == 'p')
@@ -248,13 +324,31 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             {
                                 openProfile(watchedFile, toWatchFile);
                             }
+                            else
+                            {
+                                clear();
+                                printf("Invalid choice\n");
+                                char retry;
+                                printf("Do you want to try again? (Y/N):\n");
+                                scanf(" %c", &retry);
+                                getchar();
+                                if (retry == 'y' || retry == 'Y')
+                                {
+                                    continue; // Retry the watched movies section.
+                                }
+                                else
+                                {
+                                    return; // Exit the program.
+                                }
+                            }
                         }
+
                         else
                         {
                             clear();
                             printf("Invalid choice\n");
                             char retry;
-                            printf("Do you want to try again? (Y/N): ");
+                            printf("Do you want to try again? (Y/N):\n");
                             scanf(" %c", &retry);
                             getchar();
                             if (retry == 'y' || retry == 'Y')
@@ -274,20 +368,25 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                     {
                         clear();
                         printf("This is to_watched movie section\n");
-                        printf("Wanna see all list or search according to your own preference? For all, enter A; for search, enter S:  ");
+                        printf("What do you want to do?\n");
+                        printf("See All Watch List=A\nSearch Movie By First Letter=S\n\n");
+
                         scanf(" %c", &ch2);
                         getchar();
 
                         if (ch2 == 'a' || ch2 == 'A')
                         {
+                            clear();
                             printAllMovies(toWatchFile);
+                            printf("Thankyou\n");
+                            printf("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
                             char ch3;
-                            printf("To go back to the profile section enter P; to quit enter Q; and for main menu enter M: ");
+                            printf("Go to Profile= P\nQuit = Q\nMain Menu= M\n\n");
                             scanf(" %c", &ch3);
                             getchar();
-                            if (ch3 == 'P' || ch3 == 'p')
+                            if (ch3 == 'p' || ch3 == 'P')
                             {
-                                break; // Exit the to_watch movies section and go back to the profile section.
+                                break; // Exit the watched movies section and go back to the profile section.
                             }
                             else if (ch3 == 'Q' || ch3 == 'q')
                             {
@@ -296,18 +395,37 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             else if (ch3 == 'M' || ch3 == 'm')
                             {
                                 openProfile(watchedFile, toWatchFile);
+                            }
+                            else
+                            {
+                                printf("Invalid choice\n");
+                                char retry;
+                                printf("Do you want to try again? (Y/N):\n");
+                                scanf(" %c", &retry);
+                                getchar();
+                                if (retry == 'y' || retry == 'Y')
+                                {
+                                    continue; // Retry the watched movies section.
+                                }
+                                else
+                                {
+                                    return;
+                                    // Exit the program.
+                                }
                             }
                         }
                         else if (ch2 == 's' || ch2 == 'S')
                         {
                             char al;
                             clear();
-                            printf("We have sorted movies in alphabetical order. To find, type the first letter of the movie: ");
+                            printf("This is The search bar , Enter First Letter of The Movie\n");
                             scanf(" %c", &al);
                             getchar();
                             searchMoviesByFirstLetter(toWatchFile, al);
+                            printf("Thankyou\n");
+                            printf("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
                             char ch3;
-                            printf("To go back to the profile section enter P; to quit  enter Q ; and for main menu enter M: ");
+                            printf("Go to Profile= P\nQuit = Q\nMain Menu= M\n\n ");
                             scanf(" %c", &ch3);
                             getchar();
                             if (ch3 == 'P' || ch3 == 'p')
@@ -321,6 +439,23 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             else if (ch3 == 'M' || ch3 == 'm')
                             {
                                 openProfile(watchedFile, toWatchFile);
+                            }
+                            else
+                            {
+                                printf("Invalid choice\n");
+                                char retry;
+                                printf("Do you want to try again? (Y/N):\n");
+                                scanf(" %c", &retry);
+                                getchar();
+                                if (retry == 'y' || retry == 'Y')
+                                {
+                                    continue; // Retry the watched movies section.
+                                }
+                                else
+                                {
+                                    return;
+                                    // Exit the program.
+                                }
                             }
                         }
                         else
@@ -328,7 +463,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                             clear();
                             printf("Invalid choice\n");
                             char retry;
-                            printf("Do you want to try again? (Y/N): ");
+                            printf("Do you want to try again? (Y/N):\n");
                             scanf(" %c", &retry);
                             getchar();
                             if (retry == 'y' || retry == 'Y')
@@ -347,7 +482,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                     clear();
                     printf("Invalid choice\n");
                     char retry;
-                    printf("Do you want to try again? (Y/N): ");
+                    printf("Do you want to try again? (Y/N):\n");
                     scanf(" %c", &retry);
                     getchar();
                     if (retry == 'y' || retry == 'Y')
@@ -365,8 +500,9 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
         case 'n':
         case 'N':
             clear();
-            printf("This is where you can add a new movie\n");
-            printf("Enter W to add in watched and Enter T to add to To_Watch movie:  ");
+            printf("Welcome to The Add new movie Section\nThis is where you can add a new movie\n");
+            printf("wht do you want to do?\n");
+            printf("Add to Watched List = W\nAdd to To_Watch List = T\n\n ");
             scanf(" %c", &ch2);
             getchar();
 
@@ -383,7 +519,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
                 clear();
                 printf("Invalid choice\n");
                 char retry;
-                printf("Do you want to try again? (Y/N): ");
+                printf("Do you want to try again? (Y/N):\n");
                 scanf(" %c", &retry);
                 getchar();
                 if (retry == 'y' || retry == 'Y')
@@ -401,7 +537,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
             clear();
             printf("Invalid choice\n");
             char retry;
-            printf("Do you want to try again? (Y/N): ");
+            printf("Do you want to try again? (Y/N):\n");
             scanf(" %c", &retry);
             getchar();
             if (retry == 'y' || retry == 'Y')
@@ -418,7 +554,7 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
 
 int main()
 {
-
+    // Open files for "watched" and "to watch" lists
     watchedFile = fopen("watched.bin", "a+b");
     toWatchFile = fopen("to_watched.bin", "a+b");
 
@@ -428,8 +564,10 @@ int main()
         exit(1);
     }
 
+    // Start the application by opening the user's profile
     openProfile(watchedFile, toWatchFile);
 
+    // Close the opened files before exiting the program
     fclose(watchedFile);
     fclose(toWatchFile);
 
