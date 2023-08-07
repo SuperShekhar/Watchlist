@@ -2,17 +2,12 @@
 #include <stdlib.h>
 
 // Function to clear the console screen
-// if using linux you can comment out this clear function and uncomment the other clear function
 void clear()
 {
     system("cls");
+    //system("clear"); for linux
 }
-// If you are using linux uncomment this clear function and comment out the other clear function
-/*
-void clear()
-{
-    system("clear");
-}*/
+
 
 // Structure to represent a movie
 typedef struct
