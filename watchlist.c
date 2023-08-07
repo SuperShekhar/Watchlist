@@ -21,6 +21,16 @@ typedef struct
     float rating;
     char genre[20];
 } movie;
+// Function to check if a file is empty
+int isFileEmpty(FILE *file)
+{
+    fseek(file, 0, SEEK_END);
+    if (ftell(file) == 0)
+    {
+        return 1;
+    }
+    return 0;
+}
 
 // Function to print all movies from a file
 void printAllMovies(FILE *file)
@@ -43,7 +53,7 @@ void printAllMovies(FILE *file)
 
 // Function to search and print movies by the first letter of their name
 void searchMoviesByFirstLetter(FILE *file, char letter)
-{
+{   
     clear();
     movie m;
     int count = 0;
@@ -154,8 +164,7 @@ void addToWatched(FILE *file)
     } while (ch == 'y' || ch == 'Y');
     clear();
     printf("Quit = Q\nMain Menu= Any key:\n");
-    scanf(" %c", &ch1);
-    getchar();
+    ch1=getchar();
     if (ch1 == 'q' || ch1 == 'Q')
     {
         closeFiles();
@@ -165,7 +174,7 @@ void addToWatched(FILE *file)
 
 // Function to add movies to the "to watch" list
 void addToToWatched(FILE *file)
-{
+{   clear();
     movie m;
     char ch, ch1;
 
@@ -200,8 +209,7 @@ void addToToWatched(FILE *file)
     } while (ch == 'y' || ch == 'Y');
     clear();
     printf("Quit = Q \nMain Menu= Enter Any key:\n");
-    scanf(" %c", &ch1);
-    getchar();
+    ch1=getchar();
     if (ch1 == 'q' || ch1 == 'Q')
     {
         closeFiles();
@@ -237,6 +245,12 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
             break;
         case 'p':
         case 'P':
+            if (isFileEmpty(watchedFile) && isFileEmpty(toWatchFile))
+                {
+                    printf("List is empty. Try putting some movies first from the adding section and go to the main menu section.\n");
+                    getchar(); 
+                    break;
+                }
             while (1) // Infinite loop to keep the user in the profile section until they choose to go back.
             {
                 clear();
@@ -501,13 +515,13 @@ void openProfile(FILE *watchedFile, FILE *toWatchFile)
         case 'N':
             clear();
             printf("Welcome to The Add new movie Section\nThis is where you can add a new movie\n");
-            printf("wht do you want to do?\n");
-            printf("Add to Watched List = W\nAdd to To_Watch List = T\n\n ");
+            printf("what do you want to do?\n");
+            printf("Add to Watched List = W\nAdd to To_Watch List = T\n\n");
             scanf(" %c", &ch2);
             getchar();
-
+            
             if (ch2 == 'W' || ch2 == 'w')
-            {
+            {  
                 addToWatched(watchedFile);
             }
             else if (ch2 == 't' || ch2 == 'T')
